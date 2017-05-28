@@ -35,7 +35,7 @@ use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\level\Location;
 use pocketmine\math\Vector3;
-use pocketmine\network\protocol\MovePlayerPacket;
+use pocketmine\network\mcpe\protocol\MovePlayerPacket;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
@@ -272,7 +272,7 @@ class Cameraman extends PluginBase implements Listener {
      */
     public static function sendMovePlayerPacket(Player $player){
         $packet = new MovePlayerPacket();
-        $packet->eid = 0;
+        $packet->eid = $player->getId();
         $packet->x = $player->getX();
         $packet->y = $player->getY();
         $packet->z = $player->getZ();
