@@ -437,10 +437,6 @@ class Cameraman extends PluginBase implements Listener {
             return true;
         }
 
-        if($commandAlias === "p"){ //shortcut for /cam p
-            array_unshift($args, "p");
-        }
-
         if(count($args) < 1){
             return $this->sendHelpMessages($sender);
         }
