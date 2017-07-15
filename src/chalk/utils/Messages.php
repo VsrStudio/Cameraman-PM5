@@ -51,7 +51,7 @@ class Messages {
     /**
      * @return int
      */
-    public function getVersion(){
+    public function getVersion() : string{
         return $this->version;
     }
 

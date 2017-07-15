@@ -16,7 +16,7 @@ class AutoSaveTask extends PluginTask {
         parent::__construct(Cameraman::getInstance());
     }
 
-    public function onRun($currentTick){
+    public function onRun(int $currentTick){
         Cameraman::getInstance()->saveConfigs();
     }
 }

@@ -43,7 +43,7 @@ class CameraTask extends PluginTask {
     /**
      * @param $currentTick
      */
-    public function onRun($currentTick){
+    public function onRun(int $currentTick){
         if($this->index < 0){
             Cameraman::getInstance()->sendMessage($this->getCamera()->getTarget(), "message-travelling-started", ["slowness" => $this->getCamera()->getSlowness()]);
             $this->index = 0;
