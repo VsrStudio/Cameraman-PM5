@@ -272,10 +272,8 @@ class Cameraman extends PluginBase implements Listener {
      */
     public static function sendMovePlayerPacket(Player $player){
         $packet = new MovePlayerPacket();
-        $packet->eid = $player->getId();
-        $packet->x = $player->getX();
-        $packet->y = $player->getY();
-        $packet->z = $player->getZ();
+        $packet->entityRuntimeId = $player->getId();
+        $packet->position = $player->asVector3();
         $packet->yaw = $player->getYaw();
         $packet->bodyYaw = $player->getYaw();
         $packet->pitch = $player->getPitch();
