@@ -1,4 +1,7 @@
-# Cameraman
+## General
+
+[![Poggit Release](https://poggit.pmmp.io/shield.approved/CameraMan)](https://poggit.pmmp.io/p/CameraMan)
+
 Cameraman is an automatic motion control plugin for PocketMine-MP, which allows you to create a path to automatically follow.
 
 ## Permissions
@@ -7,7 +10,7 @@ Cameraman is an automatic motion control plugin for PocketMine-MP, which allows 
 ## Commands
 | Command | Parameters | Description | Shortcut |
 | :-------: | :-------: | :-------: | :-------: |
-| `/cam p` | `[index]` | Adds a waypoint at the current position | `/p` |
+| `/cam p` | `[index]` | Adds a waypoint at the current position
 | `/cam start` | `<slowness>` | Travels the path in the given slowness | |
 | `/cam stop` | | Interrupts travelling | |
 | `/cam info` | `[index]` | Shows the information of current waypoints | |
@@ -34,3 +37,4 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ```
+Updated by robske110 (https://github.com/robske110)
