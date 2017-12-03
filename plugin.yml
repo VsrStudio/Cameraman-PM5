@@ -3,7 +3,7 @@ version: "1.1.0-3"
 
 author: ChalkPE
 main: chalk\cameraman\Cameraman
-api: [3.0.0-ALPHA8, 3.0.0-ALPHA9]
+api: [3.0.0-ALPHA8, 3.0.0-ALPHA9, 3.0.0-ALPHA10]
 
 website: http://chalk.pe
 description: An automatic motion control plugin for PocketMine-MP
