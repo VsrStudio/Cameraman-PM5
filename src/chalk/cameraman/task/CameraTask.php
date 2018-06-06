@@ -26,18 +26,14 @@ namespace chalk\cameraman\task;
 
 use chalk\cameraman\Camera;
 use chalk\cameraman\Cameraman;
-use pocketmine\scheduler\PluginTask;
+use pocketmine\scheduler\Task;
 
-class CameraTask extends PluginTask {
-    /** @var Camera */
-    private $camera;
-
+class CameraTask extends Task {
     /** @var int */
     private $index = -1;
 
     function __construct(Camera $camera){
-        parent::__construct(Cameraman::getInstance());
-        $this->camera = $camera;
+		$this->plugin = $camera;
     }
 
     /**
@@ -67,6 +63,6 @@ class CameraTask extends PluginTask {
      * @return Camera
      */
     public function getCamera(){
-        return $this->camera;
+        return $this->plugin;
     }
 }

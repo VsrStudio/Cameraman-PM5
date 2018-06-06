@@ -78,7 +78,7 @@ class Cameraman extends PluginBase implements Listener {
         $this->loadMessages();
 
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
-        $this->getServer()->getScheduler()->scheduleRepeatingTask(new AutoSaveTask(), 20 * 60 * 15); //15m
+        $this->getScheduler()->scheduleRepeatingTask(new AutoSaveTask(), 20 * 60 * 15); //15m
     }
 
     public function onDisable(){

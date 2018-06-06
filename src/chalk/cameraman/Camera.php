@@ -101,13 +101,13 @@ class Camera {
 
             $this->getTarget()->setGamemode(Player::SPECTATOR);
 
-            $this->taskId = Cameraman::getInstance()->getServer()->getScheduler()->scheduleDelayedRepeatingTask(new CameraTask($this), Cameraman::DELAY, 20 / Cameraman::TICKS_PER_SECOND)->getTaskId();
+            $this->taskId = Cameraman::getInstance()->getScheduler()->scheduleDelayedRepeatingTask(new CameraTask($this), Cameraman::DELAY, 20 / Cameraman::TICKS_PER_SECOND)->getTaskId();
         }
     }
 
     public function stop(){
         if($this->isRunning()){
-            Cameraman::getInstance()->getServer()->getScheduler()->cancelTask($this->taskId); $this->taskId = -1;
+            Cameraman::getInstance()->getScheduler()->cancelTask($this->taskId); $this->taskId = -1;
 
             $this->getTarget()->teleport($this->location);
             $this->getTarget()->setGamemode($this->gamemode);
