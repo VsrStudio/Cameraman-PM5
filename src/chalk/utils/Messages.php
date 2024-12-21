@@ -26,46 +26,41 @@ namespace chalk\utils;
 
 class Messages {
     /** @var int */
-    private $version;
+    private int $version;
 
     /** @var string */
-    private $defaultLanguage;
+    private string $defaultLanguage;
 
     /** @var array */
-    private $messages = [];
+    private array $messages;
 
     /**
      * @param array $config
      */
     public function __construct(array $config){
-        $version = $config["default-language"];
-        $this->version = (isset($version) and is_int($version)) ? $version : 0;
-
-        $defaultLanguage = $config["default-language"];
-        $this->defaultLanguage = (isset($defaultLanguage) and is_string($defaultLanguage)) ? $defaultLanguage : "en";
-
-        $messages = $config["messages"];
-        $this->messages = (isset($messages) and is_array($messages)) ? $messages : [];
+        $this->version = isset($config["default-language"]) && is_int($config["default-language"]) ? $config["default-language"] : 0;
+        $this->defaultLanguage = isset($config["default-language"]) && is_string($config["default-language"]) ? $config["default-language"] : "en";
+        $this->messages = isset($config["messages"]) && is_array($config["messages"]) ? $config["messages"] : [];
     }
 
     /**
      * @return int
      */
-    public function getVersion() : string{
+    public function getVersion(): int {
         return $this->version;
     }
 
     /**
      * @return string
      */
-    public function getDefaultLanguage(){
+    public function getDefaultLanguage(): string {
         return $this->defaultLanguage;
     }
 
     /**
      * @return array
      */
-    public function getMessages(){
+    public function getMessages(): array {
         return $this->messages;
     }
 
@@ -73,29 +68,27 @@ class Messages {
      * @param string $key
      * @param string[] $format
      * @param string $language
-     * @return null|string
+     * @return string|null
      */
-    public function getMessage($key, $format = [], $language = ""){
-        if($language === ""){
+    public function getMessage(string $key, array $format = [], string $language = ""): ?string {
+        if ($language === "") {
             $language = $this->getDefaultLanguage();
         }
 
-        $message = $this->getMessages()[$key];
-        if(!isset($message)){
+        if (!isset($this->messages[$key])) {
             return null;
         }
 
-        $string = $message[$language];
-        if(!isset($string) and $language !== $this->getDefaultLanguage()){
-            $string = $message[$this->getDefaultLanguage()];
-        }
+        $message = $this->messages[$key];
+        $string = $message[$language] ?? $message[$this->getDefaultLanguage()] ?? null;
 
-        if(isset($string)){
-            foreach($format as $key => $value){
+        if ($string !== null) {
+            foreach ($format as $key => $value) {
                 $string = str_replace("{%" . $key . "}", $value, $string);
             }
             return $string;
         }
+
         return null;
     }
 }
