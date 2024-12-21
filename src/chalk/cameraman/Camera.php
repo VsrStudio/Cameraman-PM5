@@ -4,8 +4,9 @@ namespace chalk\cameraman;
 
 use chalk\cameraman\movement\Movement;
 use chalk\cameraman\task\CameraTask;
+use pocketmine\player\Player;
 use pocketmine\level\Location;
-use pocketmine\Player;
+use pocketmine\world\Position;
 
 class Camera {
     /** @var Player */
@@ -14,7 +15,7 @@ class Camera {
     /** @var Movement[] */
     private $movements = [];
 
-    /** @var number */
+    /** @var float */
     private $slowness;
 
     /** @var int */
@@ -29,9 +30,9 @@ class Camera {
     /**
      * @param Player $target
      * @param Movement[] $movements
-     * @param number $slowness
+     * @param float $slowness
      */
-    function __construct(Player $target, array $movements, $slowness){
+    function __construct(Player $target, array $movements, float $slowness){
         $this->target = $target;
         $this->movements = $movements;
         $this->slowness = $slowness;
@@ -40,14 +41,14 @@ class Camera {
     /**
      * @return Player
      */
-    public function getTarget(){
+    public function getTarget(): Player {
         return $this->target;
     }
 
     /**
      * @return Movement[]
      */
-    public function getMovements(){
+    public function getMovements(): array {
         return $this->movements;
     }
 
@@ -55,22 +56,25 @@ class Camera {
      * @param int $index
      * @return Movement
      */
-    public function getMovement($index){
+    public function getMovement(int $index): Movement {
         return $this->movements[$index];
     }
 
     /**
-     * @return number
+     * @return float
      */
-    public function getSlowness(){
+    public function getSlowness(): float {
         return $this->slowness;
     }
 
-    public function isRunning(){
+    /**
+     * @return bool
+     */
+    public function isRunning(): bool {
         return $this->taskId !== -1;
     }
 
-    public function start(){
+    public function start(): void {
         if(!$this->isRunning()){
             Cameraman::getInstance()->sendMessage($this->getTarget(), "message-travelling-will-start");
 
@@ -79,13 +83,18 @@ class Camera {
 
             $this->getTarget()->setGamemode(Player::SPECTATOR);
 
-            $this->taskId = Cameraman::getInstance()->getScheduler()->scheduleDelayedRepeatingTask(new CameraTask($this), Cameraman::DELAY, 20 / Cameraman::TICKS_PER_SECOND)->getTaskId();
+            $this->taskId = Cameraman::getInstance()->getScheduler()->scheduleDelayedRepeatingTask(
+                new CameraTask($this), 
+                Cameraman::DELAY, 
+                20 / Cameraman::TICKS_PER_SECOND
+            )->getTaskId();
         }
     }
 
-    public function stop(){
+    public function stop(): void {
         if($this->isRunning()){
-            Cameraman::getInstance()->getScheduler()->cancelTask($this->taskId); $this->taskId = -1;
+            Cameraman::getInstance()->getScheduler()->cancelTask($this->taskId); 
+            $this->taskId = -1;
 
             $this->getTarget()->teleport($this->location);
             $this->getTarget()->setGamemode($this->gamemode);
