@@ -28,10 +28,10 @@ use pocketmine\level\Location;
 
 abstract class Movement {
     /** @var Location */
-    private $origin;
+    private Location $origin;
 
     /** @var Location */
-    private $destination;
+    private Location $destination;
 
     /**
      * @param Location $origin
@@ -45,24 +45,24 @@ abstract class Movement {
     /**
      * @return Location
      */
-    public function getOrigin(){
+    public function getOrigin(): Location {
         return $this->origin;
     }
 
     /**
      * @return Location
      */
-    public function getDestination(){
+    public function getDestination(): Location {
         return $this->destination;
     }
 
-    public function __toString(){
+    public function __toString(): string {
         return "Movement(" . $this->getOrigin() . " -> " . $this->getDestination() . ")";
     }
 
     /**
-     * @param number $slowness
+     * @param float $slowness
      * @return Location|null
      */
-    public abstract function tick($slowness);
+    public abstract function tick(float $slowness): ?Location;
 }
