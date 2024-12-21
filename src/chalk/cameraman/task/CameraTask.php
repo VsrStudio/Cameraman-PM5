@@ -32,14 +32,17 @@ class CameraTask extends Task {
     /** @var int */
     private $index = -1;
 
-    function __construct(Camera $camera){
-		$this->plugin = $camera;
+    /** @var Camera */
+    private $camera;
+
+    public function __construct(Camera $camera){
+        $this->camera = $camera;
     }
 
     /**
-     * @param $currentTick
+     * @param int $currentTick
      */
-    public function onRun(int $currentTick){
+    public function onRun(int $currentTick): void {
         if($this->index < 0){
             Cameraman::getInstance()->sendMessage($this->getCamera()->getTarget(), "message-travelling-started", ["slowness" => $this->getCamera()->getSlowness()]);
             $this->index = 0;
@@ -62,7 +65,7 @@ class CameraTask extends Task {
     /**
      * @return Camera
      */
-    public function getCamera(){
-        return $this->plugin;
+    public function getCamera(): Camera {
+        return $this->camera;
     }
 }
