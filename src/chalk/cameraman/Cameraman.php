@@ -1,27 +1,5 @@
 <?php
 
-/*
- * Copyright (C) 2015  ChalkPE
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published
- * by the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-/**
- * @author ChalkPE <chalkpe@gmail.com>
- * @since 2015-06-20 17:04
- */
-
 namespace chalk\cameraman;
 
 use chalk\cameraman\movement\Movement;
@@ -36,7 +14,7 @@ use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\level\Location;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\MovePlayerPacket;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
@@ -77,7 +55,7 @@ class Cameraman extends PluginBase implements Listener {
         $this->loadConfigs();
         $this->loadMessages();
 
-        $this->getServer()->getPluginManager()->registerEvents($this, $this);
+        Server::getInstance()->getPluginManager()->registerEvents($this, $this);
         $this->getScheduler()->scheduleRepeatingTask(new AutoSaveTask(), 20 * 60 * 15); //15m
     }
 
@@ -272,14 +250,14 @@ class Cameraman extends PluginBase implements Listener {
      */
     public static function sendMovePlayerPacket(Player $player){
         $packet = new MovePlayerPacket();
-        $packet->entityRuntimeId = $player->getId();
-        $packet->position = $player->asVector3();
-        $packet->yaw = $player->getYaw();
-        $packet->headYaw = $player->getYaw();
-        $packet->pitch = $player->getPitch();
-        $packet->onGround = false;
+$packet->entityRuntimeId = $player->getId();
+$packet->position = $player->getPosition();
+$packet->yaw = $player->getYaw();
+$packet->headYaw = $player->getYaw();
+$packet->pitch = $player->getPitch();
+$packet->onGround = true;
 
-        return $player->dataPacket($packet);
+$player->sendDataPacket($packet);
     }
 
     /* ====================================================================================================================== *
@@ -308,7 +286,7 @@ class Cameraman extends PluginBase implements Listener {
      * @param array $format
      * @return bool
      */
-    public function sendMessage(CommandSender $sender, $key, $format = []){
+    public function onCommand(CommandSender $sender, Command $command, string $commandAlias, array $args): bool
         if($sender === null){
             return false;
         }
