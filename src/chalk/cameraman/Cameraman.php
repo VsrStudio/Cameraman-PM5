@@ -436,140 +436,140 @@ class Cameraman extends PluginBase implements Listener {
     }
     
     /**
-     * @param CommandSender $sender
-     * @param Command $command
-     * @param string $commandAlias
-     * @param array $args
-     * @return bool
-     */
-    public function onCommand(CommandSender $sender, Command $command, string $commandAlias, array $args) : bool{
-        if(!$sender instanceof Player){
-            $this->sendMessage($sender, "#error-only-in-game");
-            return true;
-        }
+ * @param CommandSender $sender
+ * @param Command $command
+ * @param string $commandAlias
+ * @param array $args
+ * @return bool
+ */
+public function onCommand(CommandSender $sender, Command $command, string $commandAlias, array $args): bool{
+    if(!$sender instanceof Player){
+        $this->sendMessage($sender, "#error-only-in-game");
+        return true;
+    }
 
-        if(count($args) < 1){
-            return $this->sendHelpMessages($sender);
-        }
+    if(count($args) < 1){
+        return $this->sendHelpMessages($sender);
+    }
 
-        switch(strToLower($args[0])){
-            default:
-                $this->sendUnknownCommandErrorMessage($sender);
-                break;
+    switch(strtolower($args[0])){
+        default:
+            $this->sendUnknownCommandErrorMessage($sender);
+            break;
 
-            case "help":
-                if(count($args) > 1){
-                    return $this->sendHelpMessages($sender, $args[1]);
-                }else{
-                    return $this->sendHelpMessages($sender);
-                }
+        case "help":
+            if(count($args) > 1){
+                return $this->sendHelpMessages($sender, $args[1]);
+            }else{
+                return $this->sendHelpMessages($sender);
+            }
 
-            case "about":
-                return $this->sendAboutMessages($sender);
+        case "about":
+            return $this->sendAboutMessages($sender);
 
-            case "p":
-                if(($waypoints = $this->getWaypoints($sender)) === null){
-                    $waypoints = $this->setWaypoints($sender, []);
-                }
+        case "p":
+            if(($waypoints = $this->getWaypoints($sender)) === null){
+                $waypoints = $this->setWaypoints($sender, []);
+            }
 
-                if(count($args) > 1 and is_numeric($args[1])){
-                    if($this->checkIndex($index = intval($args[1]), $waypoints, $sender)){
-                        return true;
-                    }
-
-                    $waypoints = $this->setWaypoint($sender, $sender->getLocation(), $index - 1);
-                    $this->sendMessage($sender, "message-reset-waypoint", ["index" => $index, "total" => count($waypoints)]);
-                }else{
-                    $waypoints = $this->setWaypoint($sender, $sender->getLocation());
-                    $this->sendMessage($sender, "message-added-waypoint", ["index" => count($waypoints)]);
-                }
-                break;
-
-            case "start":
-                if(count($args) < 2 or !is_numeric($args[1])){
-                    return $this->sendHelpMessages($sender, $args[0]);
-                }
-
-                if(($waypoints = $this->getWaypoints($sender)) === null or count($waypoints) < 2){
-                    $this->sendMessage($sender, "#error-too-few-waypoints");
-                    return $this->sendHelpMessages($sender, "p");
-                }
-
-                if(($slowness = doubleval($args[1])) < 0.0000001){
-                    return $this->sendMessage($sender, "#error-negative-slowness", ["slowness" => $slowness]);
-                }
-
-                if(($camera = $this->getCamera($sender)) !== null and $camera->isRunning()){
-                    $this->sendMessage($sender, ".message-interrupting-current-travel");
-                    $camera->stop();
-                }
-
-                $this->setCamera($sender, new Camera($sender, Cameraman::createStraightMovements($waypoints), $slowness))->start();
-                break;
-
-            case "stop":
-                if(($camera = $this->getCamera($sender)) === null or !$camera->isRunning()){
-                    return $this->sendMessage($sender, "#error-travels-already-interrupted");
-                }
-
-                $camera->stop(); unset($camera);
-                $this->sendMessage($sender, "message-travelling-interrupted");
-                break;
-
-            case "info":
-                if(($waypoints = $this->getWaypoints($sender)) === null or count($waypoints) === 0){
-                    return $this->sendMessage($sender, "#error-no-waypoints-to-show");
-                }
-
-                if(count($args) > 1 and is_numeric($args[1])){
-                    if($this->checkIndex($index = intval($args[1]), $waypoints, $sender)){
-                        return true;
-                    }
-
-                    $this->sendWaypointMessage($sender, $waypoints[$index - 1], $index);
-                }else{
-                    foreach($waypoints as $index => $waypoint){
-                        $this->sendWaypointMessage($sender, $waypoint, $index + 1);
-                    }
-                }
-                break;
-
-            case "goto":
-                if(count($args) < 2 or !is_numeric($args[1])){
-                    return $this->sendHelpMessages($sender, $args[0]);
-                }
-
-                if(($waypoints = $this->getWaypoints($sender)) === null or count($waypoints) === 0){
-                    return $this->sendMessage($sender, "#error-no-waypoints-to-teleport");
-                }
-
+            if(count($args) > 1 and is_numeric($args[1])){
                 if($this->checkIndex($index = intval($args[1]), $waypoints, $sender)){
                     return true;
                 }
 
-                $sender->teleport($waypoints[$index - 1]);
-                $this->sendMessage($sender, "message-teleported", ["index" => $index]);
-                break;
+                $waypoints = $this->setWaypoint($sender, $sender->getLocation(), $index - 1);
+                $this->sendMessage($sender, "message-reset-waypoint", ["index" => $index, "total" => count($waypoints)]);
+            }else{
+                $waypoints = $this->setWaypoint($sender, $sender->getLocation());
+                $this->sendMessage($sender, "message-added-waypoint", ["index" => count($waypoints)]);
+            }
+            break;
 
-            case "clear":
-                if(($waypoints = $this->getWaypoints($sender)) === null or count($waypoints) === 0){
-                    return $this->sendMessage($sender, "#error-no-waypoints-to-remove");
+        case "start":
+            if(count($args) < 2 or !is_numeric($args[1])){
+                return $this->sendHelpMessages($sender, $args[0]);
+            }
+
+            if(($waypoints = $this->getWaypoints($sender)) === null or count($waypoints) < 2){
+                $this->sendMessage($sender, "#error-too-few-waypoints");
+                return $this->sendHelpMessages($sender, "p");
+            }
+
+            if(($slowness = doubleval($args[1])) < 0.0000001){
+                return $this->sendMessage($sender, "#error-negative-slowness", ["slowness" => $slowness]);
+            }
+
+            if(($camera = $this->getCamera($sender)) !== null and $camera->isRunning()){
+                $this->sendMessage($sender, ".message-interrupting-current-travel");
+                $camera->stop();
+            }
+
+            $this->setCamera($sender, new Camera($sender, Cameraman::createStraightMovements($waypoints), $slowness))->start();
+            break;
+
+        case "stop":
+            if(($camera = $this->getCamera($sender)) === null or !$camera->isRunning()){
+                return $this->sendMessage($sender, "#error-travels-already-interrupted");
+            }
+
+            $camera->stop(); unset($camera);
+            $this->sendMessage($sender, "message-travelling-interrupted");
+            break;
+
+        case "info":
+            if(($waypoints = $this->getWaypoints($sender)) === null or count($waypoints) === 0){
+                return $this->sendMessage($sender, "#error-no-waypoints-to-show");
+            }
+
+            if(count($args) > 1 and is_numeric($args[1])){
+                if($this->checkIndex($index = intval($args[1]), $waypoints, $sender)){
+                    return true;
                 }
 
-                if(count($args) > 1 and is_numeric($args[1])){
-                    if($this->checkIndex($index = intval($args[1]), $waypoints, $sender)){
-                        return true;
-                    }
-
-                    array_splice($waypoints, $index - 1, 1);
-                    $this->sendMessage($sender, "message-removed-waypoint", ["index" => $index, "total" => count($waypoints)]);
-                }else{
-                    $waypoints = [];
-                    $this->sendMessage($sender, "message-all-waypoint-removed");
+                $this->sendWaypointMessage($sender, $waypoints[$index - 1], $index);
+            }else{
+                foreach($waypoints as $index => $waypoint){
+                    $this->sendWaypointMessage($sender, $waypoint, $index + 1);
                 }
-                $this->setWaypoints($sender, $waypoints);
-                break;
-        }
-        return true;
+            }
+            break;
+
+        case "goto":
+            if(count($args) < 2 or !is_numeric($args[1])){
+                return $this->sendHelpMessages($sender, $args[0]);
+            }
+
+            if(($waypoints = $this->getWaypoints($sender)) === null or count($waypoints) === 0){
+                return $this->sendMessage($sender, "#error-no-waypoints-to-teleport");
+            }
+
+            if($this->checkIndex($index = intval($args[1]), $waypoints, $sender)){
+                return true;
+            }
+
+            $sender->teleport($waypoints[$index - 1]);
+            $this->sendMessage($sender, "message-teleported", ["index" => $index]);
+            break;
+
+        case "clear":
+            if(($waypoints = $this->getWaypoints($sender)) === null or count($waypoints) === 0){
+                return $this->sendMessage($sender, "#error-no-waypoints-to-remove");
+            }
+
+            if(count($args) > 1 and is_numeric($args[1])){
+                if($this->checkIndex($index = intval($args[1]), $waypoints, $sender)){
+                    return true;
+                }
+
+                array_splice($waypoints, $index - 1, 1);
+                $this->sendMessage($sender, "message-removed-waypoint", ["index" => $index, "total" => count($waypoints)]);
+            }else{
+                $waypoints = [];
+                $this->sendMessage($sender, "message-all-waypoint-removed");
+            }
+            $this->setWaypoints($sender, $waypoints);
+            break;
     }
+    return true;
+}
 }
