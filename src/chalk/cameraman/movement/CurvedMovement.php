@@ -36,13 +36,13 @@ class CurvedMovement extends StraightMovement {
     }
 
     /**
-     * @param number $slowness
+     * @param float $slowness
      * @param float $curve
      * @return Location|null
      */
-    public function tick($slowness, $curve = 5.0){
+    public function tick(float $slowness, float $curve = 5.0): ?Location {
         if(($location = parent::tick($slowness)) !== null){
-            $offset = $curve * sin(M_PI * ($this->current / ($this->length * $slowness)));
+            $offset = $curve * sin(M_PI * ($this->current / ($this->length * $slowness))));
             $location->setComponents($location->getX() + $offset, $location->getY(), $location->getZ() + $offset);
         }
         return $location;
